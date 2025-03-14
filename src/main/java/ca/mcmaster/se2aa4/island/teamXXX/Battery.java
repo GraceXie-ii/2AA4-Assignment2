@@ -16,29 +16,25 @@ public class Battery {
 
   public void fly() {
     battery_power -= fly_cost;
-    batteryCheck();
   }
 
   public void heading() {
     battery_power -= heading_cost;
-    batteryCheck();
   }
 
   public void echo() {
     battery_power = battery_power - echo_cost;
-    batteryCheck();
   }
 
   public void scan() {
     battery_power -= scan_cost;
-    batteryCheck();
   }
 
   public void stop() {
-    //might require to pass in position
+    // this implementation might require to be passed in a position variable from another class
   }
 
-  private boolean batteryCheck() {
+  public boolean batteryCheck() {
     if (battery_power > 0) {
       return true;
     }
