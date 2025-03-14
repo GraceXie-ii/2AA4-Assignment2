@@ -11,11 +11,15 @@ import org.json.JSONTokener;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
+    private JSONObject info;
+    private int choice = 0;
+    
+    
 
     @Override
     public void initialize(String s) {
         logger.info("** Initializing the Exploration Command Center");
-        JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
+        info = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Initialization info:\n {}",info.toString(2));
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
@@ -26,7 +30,35 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String takeDecision() {
         JSONObject decision = new JSONObject();
-        decision.put("action", "stop"); // we stop the exploration immediately
+        JSONObject parameters = new JSONObject();
+
+        if (choice == 0) {
+            decision.put("action", "fly"); // make action JSON {"action": "fly"}
+            choice=1; // set to turn south
+        }
+        else if (choice == 1) {
+            decision.put("action", "heading"); // make action JSON {"action": "heading"}
+            parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "S"}}
+            decision.put("parameters",  parameters); // combine JSON {"action": "heading", "parameters": {"direction": "S"}}
+
+            choice=2; // set to echo
+        } 
+        else if (choice == 2) {
+            decision.put("action", "echo"); // make action JSON {"action": "echo"}
+            parameters.put("direction", "E"); // put parameter JSON {"parameters": {"direction": "E"}}
+            decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": "E"}}
+
+            choice = 3; // set to scan
+        }
+        else if (choice == 3) {
+            decision.put("action", "scan"); // make action JSON {"action": "scan"}
+
+            choice = 4; // set to stop
+        }
+        else {
+            decision.put("action", "stop"); // make action JSON {"action": "stop"}
+        }
+        //decision.put("action", "stop"); // we stop the exploration immediately
         logger.info("** Decision: {}",decision.toString());
         return decision.toString();
     }
