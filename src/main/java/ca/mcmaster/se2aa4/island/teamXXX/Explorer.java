@@ -11,36 +11,46 @@ import org.json.JSONTokener;
 
 public class Explorer implements IExplorerRaid {
 
+    // Initialize the logger
     private final Logger logger = LogManager.getLogger();
+
+    // Private JSON objects to store exploration info and results info
     private JSONObject info, extraInfo;
-    //private int choice = 0;
-    private boolean radared = false, Newfoundland = false, scanned = false;
-    private String flyDir = "E";
-    
-    
+
+    // private classes of sub-classes
+    Drone drone;
+
+    // Private variables to keep track of the state of the exploration
+    private boolean scanned = false, radared = false, Newfoundland = false;
 
     @Override
     public void initialize(String s) {
+        // create new JSON reader info
         logger.info("** Initializing the Exploration Command Center");
         info = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Initialization info:\n {}",info.toString(2));
+
+        // create variables to get drone heading and battery level
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
+
+        // Initialize drone state
+        drone = new Drone(batteryLevel, direction);
+
     }
 
     @Override
     public String takeDecision() {
-        // Create the decision and parameter JSON objects
+        // Initialize the decision JSON object, variables to store found value and range
         JSONObject decision = new JSONObject();
-        JSONObject parameters = new JSONObject();
         String foundValue = "";
         int rangeValue = 0;
 
-        // Check if battery is low, stop
+        // If battery is low, stop mission
         if (info.getInt("budget") < 100) {
-            decision.put("action", "stop"); // make action JSON {"action": "stop"}
+            decision = drone.stop(); // stop
         }
 
         // If last decision was echo, get value and range
@@ -57,46 +67,32 @@ public class Explorer implements IExplorerRaid {
 
         // Implement the decision logic
         if (scanned == false) { // If not scanned, scan
-            decision.put("action", "scan"); // make action JSON {"action": "scan"}
+            decision = drone.scan(); // scan
         }
         else if (radared == false) { // If not radared, radar
-            // echo [S]outh
-            decision.put("action", "echo"); // make action JSON {"action": "echo"}
-            parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "E"}}
-            decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": "E"}}
+            decision = drone.echo("S"); // echo [S]outh
         }
         else if (Newfoundland == false) { // ocean search phase
             if (foundValue.equals("GROUND")) {
-                // heading [S]outh
-                decision.put("action", "heading"); // make action JSON {"action": "heading"}
-                parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "S"}}
-                decision.put("parameters",  parameters); // combine JSON {"action": "heading", "parameters": {"direction": "S"}}
+                decision = drone.heading("S"); // turn [S]outh (>v)
                 Newfoundland = true;
-                flyDir = "S";
             }
             else { // if foundValue.equals("OUT_OF_RANGE")
-                // fly [E]ast
-                decision.put("action", "fly"); // make action JSON {"action": "fly"}
-                parameters.put("direction", flyDir); // put parameter JSON {"parameters": {"direction": "E"}}
-                decision.put("parameters",  parameters); // combine JSON {"action": "fly", "parameters": {"direction": "E"}}
+                decision = drone.fly(); // fly [E]ast
             }
         }
         else { // newfoundland is true
             if (rangeValue >= 2) {
-                // fly [S]outh to coast
-                decision.put("action", "fly"); // make action JSON {"action": "fly"}
-                parameters.put("direction", flyDir); // put parameter JSON {"parameters": {"direction": "E"}}
-                decision.put("parameters",  parameters); // combine JSON {"action": "fly", "parameters": {"direction": "E"}}
+                decision = drone.fly(); // fly [S]outh to coast
             }
             else { // if rangeValue < 2
-                // log land is found and stop mission !!!FOR MVP!!!
-                logger.info("Land is found");
-                decision.put("action", "stop"); // make action JSON {"action": "stop"}
+                logger.info("Land is found"); // log land is found and stop mission !!!FOR MVP!!!
+                decision = drone.stop(); // stop
             }
         }
         
         
-        // rotate state of scan and radared: scan, radar, fly/heading/stop
+        // rotate strategy state: scan, radar, fly/heading/stop
         if (!scanned && !radared) {
             scanned = true;
         }
@@ -115,19 +111,28 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public void acknowledgeResults(String s) {
+        // Create the response JSON object
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Response received:\n"+response.toString(2));
+
+        // Get the cost, status and extra information
         Integer cost = response.getInt("cost");
         logger.info("The cost of the action was {}", cost);
         String status = response.getString("status");
         logger.info("The status of the drone is {}", status);
-        extraInfo = response.getJSONObject("extras");
+        extraInfo = response.getJSONObject("extras"); // store extra information in self class
         logger.info("Additional information received: {}", extraInfo);
     }
 
     @Override
     public String deliverFinalReport() {
-        return "no creek found";
+        // log land is found !!!FOR MVP!!!
+        if (Newfoundland) {
+            return "Land is found for MVP!!!";
+        }
+        else {
+            return "no creek found";
+        }
     }
 
 }
