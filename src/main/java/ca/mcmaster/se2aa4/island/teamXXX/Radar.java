@@ -1,13 +1,16 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
-import org.json.JSONTokener;
-import java.io.*;
+//import org.json.JSONTokener;
+//import java.io.*;
 
 public class Radar {
     private String frontRadar;
     private String leftRadar;
     private String rightRadar;
+    
+    private String foundValue = "";
+    private int rangeValue = 0;
 
     public Radar(){
         this.frontRadar = "";
@@ -16,13 +19,17 @@ public class Radar {
     }
 
     public String sendRadarSingal(String direction){
-        JSONObject command = new JSONObject();
-        command.put("action", "echo");
-        command.put("direction", direction);
-        return command.toString();
+        JSONObject decision = new JSONObject(); // create new JSON object - decision
+        JSONObject parameters = new JSONObject(); // create new JSON object - parameters
+
+        decision.put("action", "echo"); // make action JSON {"action": "echo"}
+        parameters.put("direction", direction); // put parameter JSON {"parameters": {"direction": direction}}
+        decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": direction}}
+
+        return decision.toString(); // return decision JSON {"action": "echo", "parameters": {"direction": direction}}
     }
 
-    public  void processRadarResponse(String direction, String response){
+    public void processRadarResponse(String direction, String response){
         if(direction.equals("FRONT")){
             this.frontRadar = response;
         }else if(direction.equals("LEFT")){

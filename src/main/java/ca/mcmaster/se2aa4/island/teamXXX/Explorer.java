@@ -17,11 +17,13 @@ public class Explorer implements IExplorerRaid {
     // Private JSON objects to store exploration info and results info
     private JSONObject info, extraInfo;
 
-    // private classes of sub-classes
+    // private classes of sub-class drone
     Drone drone;
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
+    private String foundValue = "";
+    private int rangeValue = 0;
 
     @Override
     public void initialize(String s) {
@@ -38,35 +40,19 @@ public class Explorer implements IExplorerRaid {
 
         // Initialize drone state
         drone = new Drone(batteryLevel, direction);
-
     }
 
     @Override
     public String takeDecision() {
         // Initialize the decision JSON object, variables to store found value and range
-        JSONObject decision = new JSONObject();
-        String foundValue = "";
-        int rangeValue = 0;
-
-        // If battery is low, stop mission
-        if (info.getInt("budget") < 100) {
-            decision = drone.stop(); // stop
-        }
-
-        // If last decision was echo, get value and range
-        if (radared) {
-            if (extraInfo.has("found")) {
-                foundValue = extraInfo.getString("found");
-                logger.info("Found value: {}", foundValue);
-            }
-            if (extraInfo.has("range")) {
-                rangeValue = extraInfo.getInt("range");
-                logger.info("Range value: {}", rangeValue);
-            }
-        }
+        String decision = "";
 
         // Implement the decision logic
-        if (scanned == false) { // If not scanned, scan
+        // If battery is low, stop mission; ocean search phase - scan/radar S/move E; ground phase - move S/stop
+        if (info.getInt("budget") < 100) { // If battery is low, stop mission
+            decision = drone.stop(); // stop
+        }
+        else if (scanned == false) { // If not scanned, scan
             decision = drone.scan(); // scan
         }
         else if (radared == false) { // If not radared, radar
@@ -81,7 +67,7 @@ public class Explorer implements IExplorerRaid {
                 decision = drone.fly(); // fly [E]ast
             }
         }
-        else { // newfoundland is true
+        else { // land is found
             if (rangeValue >= 2) {
                 decision = drone.fly(); // fly [S]outh to coast
             }
@@ -90,7 +76,6 @@ public class Explorer implements IExplorerRaid {
                 decision = drone.stop(); // stop
             }
         }
-        
         
         // rotate strategy state: scan, radar, fly/heading/stop
         if (!scanned && !radared) {
@@ -105,8 +90,8 @@ public class Explorer implements IExplorerRaid {
         }
 
         // Log the decision
-        logger.info("** Decision: {}",decision.toString());
-        return decision.toString();
+        logger.info("** Decision: {}",decision);
+        return decision;
     }
 
     @Override
@@ -122,6 +107,14 @@ public class Explorer implements IExplorerRaid {
         logger.info("The status of the drone is {}", status);
         extraInfo = response.getJSONObject("extras"); // store extra information in self class
         logger.info("Additional information received: {}", extraInfo);
+
+        // If found and range values are present, store them
+        if (extraInfo.has("found")) {
+            foundValue = extraInfo.getString("found");
+            rangeValue = extraInfo.getInt("range");
+            //logger.info("Found value: {}", foundValue);
+            //logger.info("Range value: {}", rangeValue);
+        }
     }
 
     @Override
