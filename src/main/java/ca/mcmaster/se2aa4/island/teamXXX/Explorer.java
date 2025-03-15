@@ -14,7 +14,7 @@ public class Explorer implements IExplorerRaid {
     private final Logger logger = LogManager.getLogger();
     private JSONObject info, extraInfo;
     //private int choice = 0;
-    private boolean radared = false, Newfoundland = false;
+    private boolean radared = false, Newfoundland = false, scanned = false;
     private String flyDir = "E";
     
     
@@ -56,30 +56,17 @@ public class Explorer implements IExplorerRaid {
         }
 
         // Implement the decision logic
-        /* 
-         *  If not Newfoundland:
-         *      If not radared, echo [S]outh
-         *      Elif (radered and) value is OUT_OF_RANGE:
-         *          fly [E]ast
-         *      Else (radered and) value is GROUND:
-         *          heading [S]outh
-         *          change direction to [S]outh
-         *          make Newfoundland boolean true
-         *  If Newfoundland:
-         *      If range >= 2:
-         *          fly to coast
-         *      Else range < 2:    
-         *          log land is found !!!FOR MVP!!!
-         *          stop !!!FOR NOW!!!
-        */
-        if (Newfoundland == false) {
-            if (radared == false) {
-                // echo [S]outh
-                decision.put("action", "echo"); // make action JSON {"action": "echo"}
-                parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "E"}}
-                decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": "E"}}
-            }
-            else if (foundValue.equals("GROUND")) {
+        if (scanned == false) { // If not scanned, scan
+            decision.put("action", "scan"); // make action JSON {"action": "scan"}
+        }
+        else if (radared == false) { // If not radared, radar
+            // echo [S]outh
+            decision.put("action", "echo"); // make action JSON {"action": "echo"}
+            parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "E"}}
+            decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": "E"}}
+        }
+        else if (Newfoundland == false) { // ocean search phase
+            if (foundValue.equals("GROUND")) {
                 // heading [S]outh
                 decision.put("action", "heading"); // make action JSON {"action": "heading"}
                 parameters.put("direction", "S"); // put parameter JSON {"parameters": {"direction": "S"}}
@@ -108,8 +95,18 @@ public class Explorer implements IExplorerRaid {
             }
         }
         
-        // switch state of radared
-        radared = !radared;
+        
+        // rotate state of scan and radared: scan, radar, fly/heading/stop
+        if (!scanned && !radared) {
+            scanned = true;
+        }
+        else if (scanned && !radared) {
+            radared = true;
+        }
+        else if (scanned && radared) {
+            scanned = false;
+            radared = false;
+        }
 
         // Log the decision
         logger.info("** Decision: {}",decision.toString());
