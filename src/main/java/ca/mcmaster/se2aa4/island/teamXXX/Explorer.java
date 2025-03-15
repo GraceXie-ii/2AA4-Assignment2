@@ -15,15 +15,15 @@ public class Explorer implements IExplorerRaid {
     private final Logger logger = LogManager.getLogger();
 
     // Private JSON objects to store exploration info and results info
-    private JSONObject info, extraInfo;
+    private JSONObject info;
 
     // private classes of sub-class drone
     Drone drone;
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
-    private String foundValue = "";
-    private int rangeValue = 0;
+    //private String foundValue = "";
+    //private int rangeValue = 0;
 
     @Override
     public void initialize(String s) {
@@ -56,11 +56,16 @@ public class Explorer implements IExplorerRaid {
             decision = drone.scan(); // scan
         }
         else if (radared == false) { // If not radared, radar
-            decision = drone.echo("S"); // echo [S]outh
+            if (Newfoundland == false) {
+                decision = drone.echo("RIGHT"); // echo south, ocean search phase
+            }
+            else {
+                decision = drone.echo("FRONT"); // echo south, approaching coast
+            }
         }
         else if (Newfoundland == false) { // ocean search phase
-            if (foundValue.equals("GROUND")) {
-                decision = drone.heading("S"); // turn [S]outh (>v)
+            if (drone.getRadarInfo().getString("found").equals("GROUND")) {
+                decision = drone.heading("R"); // turn [S]outh (>v)
                 Newfoundland = true;
             }
             else { // if foundValue.equals("OUT_OF_RANGE")
@@ -68,7 +73,7 @@ public class Explorer implements IExplorerRaid {
             }
         }
         else { // land is found
-            if (rangeValue >= 2) {
+            if (drone.getRadarInfo().getInt("range") >= 2) {
                 decision = drone.fly(); // fly [S]outh to coast
             }
             else { // if rangeValue < 2
@@ -105,15 +110,12 @@ public class Explorer implements IExplorerRaid {
         logger.info("The cost of the action was {}", cost);
         String status = response.getString("status");
         logger.info("The status of the drone is {}", status);
-        extraInfo = response.getJSONObject("extras"); // store extra information in self class
+        JSONObject extraInfo = response.getJSONObject("extras"); // store extra information in self class
         logger.info("Additional information received: {}", extraInfo);
 
-        // If found and range values are present, store them
+        // If found and range values are present, update them in radar
         if (extraInfo.has("found")) {
-            foundValue = extraInfo.getString("found");
-            rangeValue = extraInfo.getInt("range");
-            //logger.info("Found value: {}", foundValue);
-            //logger.info("Range value: {}", rangeValue);
+            drone.processRadarResponse(extraInfo.getString("found"), extraInfo.getInt("range"));
         }
     }
 
