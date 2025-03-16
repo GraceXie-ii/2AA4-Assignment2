@@ -1,11 +1,13 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Drone implements FlyMachine{
 
     // private classes to keep track of extra information
     private Radar radar;
+    private PhotoScanner scanner;
 
     // private variables to keep track of the state of drone
     private int batteryLevel;
@@ -14,8 +16,9 @@ public class Drone implements FlyMachine{
 
     public Drone(int batteryLevel, String direction){
 
-        // Initialize drone's radar
+        // Initialize drone's radar, scanner
         this.radar = new Radar();
+        this.scanner = new PhotoScanner();
 
         // Initialize drone's battery level and direction
         this.batteryLevel = batteryLevel;
@@ -33,10 +36,15 @@ public class Drone implements FlyMachine{
         return radar.getRadarInfo(); // return radar info
     }
 
+    // command chain to scan methods: scan
     public String scan() {
-        JSONObject decision = new JSONObject(); // create new JSON object
-        decision.put("action", "scan"); // make action JSON {"action": "scan"}
-        return decision.toString(); // return decision JSON {"action": "scan"}
+        return scanner.scan(); // return scan JSON {"action": "scan"}
+    }
+    public void processScanResponse(JSONArray creeks, JSONArray sites) {
+        scanner.processScanResponse(creeks, sites); // process scan response
+    }
+    public JSONObject getScanInfo() {
+        return scanner.getScanInfo(); // return scan info
     }
   
     public String fly() {

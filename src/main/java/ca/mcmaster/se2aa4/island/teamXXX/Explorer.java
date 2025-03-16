@@ -22,8 +22,6 @@ public class Explorer implements IExplorerRaid {
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
-    //private String foundValue = "";
-    //private int rangeValue = 0;
 
     @Override
     public void initialize(String s) {
@@ -113,9 +111,13 @@ public class Explorer implements IExplorerRaid {
         JSONObject extraInfo = response.getJSONObject("extras"); // store extra information in self class
         logger.info("Additional information received: {}", extraInfo);
 
-        // If found and range values are present, update them in radar
+        // If echo, found and range values are present, update them in radar
         if (extraInfo.has("found")) {
             drone.processRadarResponse(extraInfo.getString("found"), extraInfo.getInt("range"));
+        }
+        // If scan, creeks and sites values are present, update them in scanner
+        else if (extraInfo.has("creeks")) {
+            drone.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
         }
     }
 
@@ -123,6 +125,7 @@ public class Explorer implements IExplorerRaid {
     public String deliverFinalReport() {
         // log land is found !!!FOR MVP!!!
         if (Newfoundland) {
+            logger.info("Scanned creeks and sites: {}", drone.getScanInfo().toString(2)); // temporary scan log
             return "Land is found for MVP!!!";
         }
         else {
