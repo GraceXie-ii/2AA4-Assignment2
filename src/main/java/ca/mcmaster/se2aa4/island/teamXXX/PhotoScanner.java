@@ -32,7 +32,6 @@ public class PhotoScanner {
                 this.sites.put(sites.getJSONObject(i));
             }
         }
-        
     }
 
     public JSONObject getScanInfo() {

@@ -11,54 +11,30 @@ public class Radar {
 
     // Declare variables to keep track of the last direction and orientation of the radar echo
     private String lastOrientation;
-    private Direction lastDir;
-
-    // Declare final variables to store the four directions
-    public enum Direction{
-        N, E, S, W;
-    
-        public Direction turnLeft(){
-            return Direction.values()[(this.ordinal() + 3) % 4];
-        }
-
-        public Direction turnRight(){
-            return Direction.values()[(this.ordinal() + 1) % 4];
-        }
-    }
-
 
     public Radar(){
         // Initialize radar info JSON objects, last direction and orientation
         this.frontRadar = new JSONObject();
         this.leftRadar = new JSONObject();
         this.rightRadar = new JSONObject();
-        this.lastDir = Direction.E;
         this.lastOrientation = "FRONT";
     }
 
-    public String sendRadarSignal(String direction, Direction droneDir){
-        JSONObject decision = new JSONObject(); // create new JSON object - decision
-        JSONObject parameters = new JSONObject(); // create new JSON object - parameters
-
-        // Calculate direction of echo based on current drone direction, update last direction, LEFT/FRONT/RIGHT -> NESW
-        if (direction.equals("LEFT")) {
-            lastDir = droneDir.turnLeft();
-        } else if (direction.equals("RIGHT")) {
-            lastDir = droneDir.turnRight();
-        } else if (direction.equals("FRONT")) {
-            lastDir = droneDir;
-        }
+    public String sendRadarSignal(String orientation, String echoDir){
+        // create new JSON object - decision, parameters
+        JSONObject decision = new JSONObject(); 
+        JSONObject parameters = new JSONObject();      
 
         // Store last orientation, FRONT/LEFT/RIGHT
-        lastOrientation = direction;
+        lastOrientation = orientation;
 
-        System.out.println("Last direction: " + lastDir + " Last orientation: " + lastOrientation + "given direction: " + direction);
+        // create JSON object = {"action": "echo", "parameters": {"direction": echoDir}}
+        decision.put("action", "echo"); 
+        parameters.put("direction", echoDir); 
+        decision.put("parameters",  parameters); 
 
-        decision.put("action", "echo"); // make action JSON {"action": "echo"}
-        parameters.put("direction", lastDir); // put parameter JSON {"parameters": {"direction": lastDir}}
-        decision.put("parameters",  parameters); // combine JSON {"action": "echo", "parameters": {"direction": lastDir}}
-
-        return decision.toString(); // return decision JSON {"action": "echo", "parameters": {"direction": lastDir}}
+        // return decision JSON
+        return decision.toString();  
     }
 
     public void processRadarResponse(String found, int range){

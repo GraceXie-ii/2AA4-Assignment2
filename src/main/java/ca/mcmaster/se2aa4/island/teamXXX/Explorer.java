@@ -18,8 +18,12 @@ public class Explorer implements IExplorerRaid {
     // Private JSON objects to store exploration info and results info
     private JSONObject info;
 
-    // private classes of sub-class drone
-    Drone drone;
+    // private classes of sub-classes
+    //Drone drone;
+    private Direction droneDir;
+    private Move move;
+    private Radar radar;
+    private PhotoScanner scanner;
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
@@ -37,8 +41,12 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
-        // Initialize drone state
-        drone = new Drone(batteryLevel, direction);
+        // Initialize drone direction, basic movements, radar, and scanner
+        droneDir = new Direction(direction);
+        move = new Move();
+        radar = new Radar();
+        scanner = new PhotoScanner();
+
     }
 
     @Override
@@ -49,35 +57,35 @@ public class Explorer implements IExplorerRaid {
         // Implement the decision logic
         // If battery is low, stop mission; ocean search phase - scan/radar S/move E; ground phase - move S/stop
         if (info.getInt("budget") < 100) { // If battery is low, stop mission
-            decision = drone.stop(); // stop
+            decision = move.stop(); // stop
         }
         else if (scanned == false) { // If not scanned, scan
-            decision = drone.scan(); // scan
+            decision = scanner.scan(); // scan
         }
         else if (radared == false) { // If not radared, radar
             if (Newfoundland == false) {
-                decision = drone.echo("RIGHT"); // echo south, ocean search phase
+                decision = radar.sendRadarSignal("RIGHT", droneDir.ifTurn("RIGHT")); // echo south, ocean search phase
             }
             else {
-                decision = drone.echo("FRONT"); // echo south, approaching coast
+                decision = radar.sendRadarSignal("FRONT", droneDir.ifTurn("FRONT")); // echo south, approaching coast
             }
         }
         else if (Newfoundland == false) { // ocean search phase
-            if (drone.getRadarInfo().getString("found").equals("GROUND")) {
-                decision = drone.heading("R"); // turn [S]outh (>v)
+            if (radar.getRadarInfo().getString("found").equals("GROUND")) {
+                decision = move.heading(droneDir.turn("R")); // turn [S]outh (>v)
                 Newfoundland = true;
             }
             else { // if foundValue.equals("OUT_OF_RANGE")
-                decision = drone.fly(); // fly [E]ast
+                decision = move.fly(); // fly [E]ast
             }
         }
         else { // land is found
-            if (drone.getRadarInfo().getInt("range") >= 2) {
-                decision = drone.fly(); // fly [S]outh to coast
+            if (radar.getRadarInfo().getInt("range") >= 2) {
+                decision = move.fly(); // fly [S]outh to coast
             }
             else { // if rangeValue < 2
                 logger.info("Land is found"); // log land is found and stop mission !!!FOR MVP!!!
-                decision = drone.stop(); // stop
+                decision = move.stop(); // stop
             }
         }
         
@@ -114,11 +122,11 @@ public class Explorer implements IExplorerRaid {
 
         // If echo, found and range values are present, update them in radar
         if (extraInfo.has("found")) {
-            drone.processRadarResponse(extraInfo.getString("found"), extraInfo.getInt("range"));
+            radar.processRadarResponse(extraInfo.getString("found"), extraInfo.getInt("range"));
         }
         // If scan, creeks and sites values are present, update them in scanner
         else if (extraInfo.has("creeks")) {
-            drone.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
+            scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
         }
     }
 
@@ -126,7 +134,7 @@ public class Explorer implements IExplorerRaid {
     public String deliverFinalReport() {
         // log land is found !!!FOR MVP!!!
         if (Newfoundland) {
-            logger.info("Scanned creeks and sites: {}", drone.getScanInfo().toString(2)); // temporary scan log
+            logger.info("Scanned creeks and sites: {}", scanner.getScanInfo().toString(2)); // temporary scan log
             return "Land is found for MVP!!!";
         }
         else {

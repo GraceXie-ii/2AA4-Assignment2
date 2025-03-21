@@ -1,40 +1,48 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
-class Direction {
-  private String direction;
-  private static final String[] DIRECTIONS = {"NORTH", "EAST", "SOUTH", "WEST"};
+public class Direction {
+    // Initialize drone direction, final list of directions
+    private String droneDir;
+    private static final String DIRECTIONS = "NESW";
 
-  public Direction(String direction) {
-      this.direction = direction;
-  }
+    // Constructor to initialize drone direction
+    public Direction(String direction) {
+        this.droneDir = direction;
+    }
 
-  public String turn(String turn) {
-      if (turn.equals("left")) {
-          return turnLeft();
-      }
-      return turnRight();
-  }
+    // for heading
+    public String turn(String turn) {
 
-  private String turnLeft() {
-      int index = findIndex(direction);
-      index = (index + 3) % 4; // Move counter-clockwise
-      direction = DIRECTIONS[index];
-      return direction;
-  }
+        // calculate new direction, update drone direction
+        if (turn.equals("L")) {
+            this.droneDir = DIRECTIONS.charAt((DIRECTIONS.indexOf(this.droneDir) + 3) % 4) + "";
+        } else if (turn.equals("R")) {
+            this.droneDir = DIRECTIONS.charAt((DIRECTIONS.indexOf(this.droneDir) + 1) % 4) + "";
+        } 
 
-  private String turnRight() {
-      int index = findIndex(direction);
-      index = (index + 1) % 4; // Move clockwise
-      direction = DIRECTIONS[index];
-      return direction;
-  }
+        // return new direction
+        return this.droneDir;
+    }
 
-  private int findIndex(String dir) {
-      for (int i = 0; i < DIRECTIONS.length; i++) {
-          if (DIRECTIONS[i].equals(dir)) {
-              return i;
-          }
-      }
-      throw new IllegalArgumentException("Invalid direction: " + dir);
-  }
+    // for echo
+    public String ifTurn(String turn) {
+
+        // Initialize a dummy direction
+        String direction = "";
+
+        // calculate left/right/front direction, else print invalid direction
+        if (turn.equals("LEFT")) {
+            direction = DIRECTIONS.charAt((DIRECTIONS.indexOf(this.droneDir) + 3) % 4) + "";
+        } else if (turn.equals("RIGHT")) {
+            direction = DIRECTIONS.charAt((DIRECTIONS.indexOf(this.droneDir) + 1) % 4) + "";
+        } else if (turn.equals("FRONT")) {
+            direction = DIRECTIONS.charAt(DIRECTIONS.indexOf(this.droneDir)) + "";
+        } else {
+            System.out.println("Invalid direction");
+        }
+
+        // return left or right direction
+        return direction;
+    }
+
 }

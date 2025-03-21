@@ -1,13 +1,6 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 public class Drone{
-
-    // private classes to keep track of extra information
-    private Radar radar;
-    private PhotoScanner scanner;
 
     // private variables to keep track of the state of drone
     private int batteryLevel;
@@ -16,15 +9,12 @@ public class Drone{
 
     public Drone(int batteryLevel, String direction){
 
-        // Initialize drone's radar, scanner
-        this.radar = new Radar();
-        this.scanner = new PhotoScanner();
-
         // Initialize drone's battery level and direction
         this.batteryLevel = batteryLevel;
         this.DroneDir = direction;
     }
 
+    /* 
     // command chain to radar methods: echo, processRadarResponse, getRadarInfo
     public String echo(String direction) {
         return radar.sendRadarSingal(direction, this.DroneDir); // return radar JSON {"action": "echo", "parameters": {"direction": direction}}
@@ -76,6 +66,7 @@ public class Drone{
         decision.put("action", "stop"); // make action JSON {"action": "stop"}
         return decision.toString(); // return decision JSON {"action": "stop"}
     }
+    */
  
 
 }
