@@ -148,8 +148,6 @@ public class DroneStrategy {
             decision = "stop"; // stop
         }
 
-
-
         return decision;
     }
     
