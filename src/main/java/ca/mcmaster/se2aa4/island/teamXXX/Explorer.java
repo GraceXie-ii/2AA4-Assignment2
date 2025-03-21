@@ -23,7 +23,7 @@ public class Explorer implements IExplorerRaid {
     private Move move;
     private Radar radar;
     private PhotoScanner scanner;
-    private Strategy strategy;
+    private DroneStrategy strategy;
 
     @Override
     public void initialize(String s) {
@@ -43,7 +43,7 @@ public class Explorer implements IExplorerRaid {
         move = new Move();
         radar = new Radar();
         scanner = new PhotoScanner();
-        strategy = new Strategy("findLand");
+        strategy = new DroneStrategy("findLand");
 
     }
 

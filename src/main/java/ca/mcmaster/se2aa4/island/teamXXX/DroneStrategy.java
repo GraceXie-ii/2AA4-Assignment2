@@ -2,14 +2,14 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
 
-public class Strategy {
+public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
     private String strategy;
 
     // Constructor to allow strategy choice
-    public Strategy(String strategy) {
+    public DroneStrategy(String strategy) {
         if (strategy.equals("findLand")) {
             this.strategy = "findLand";
         }
