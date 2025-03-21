@@ -105,6 +105,7 @@ public class Explorer implements IExplorerRaid {
         // If scan, creeks and sites values are present, update them in scanner
         else if (extraInfo.has("creeks")||extraInfo.has("sites")) {
             scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
+            // store creek or site id, current drone position 
         }
 
         logger.info("The drone position is {}", move.getCoordinates());

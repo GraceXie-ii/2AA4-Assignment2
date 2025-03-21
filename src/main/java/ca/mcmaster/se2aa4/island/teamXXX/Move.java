@@ -29,6 +29,11 @@ public class Move {
     }
 
     public String heading(String direction, int[] direction_vector) { // left or right turn
+
+        // update drone position
+        this.x += direction_vector[0];
+        this.y += direction_vector[1];
+
         // create new JSON object - decision, parameters
         JSONObject decision = new JSONObject(); 
         JSONObject parameters = new JSONObject(); 
