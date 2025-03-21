@@ -5,8 +5,9 @@ import org.json.JSONObject;
 public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
-    private boolean scanned = false, radared = false, Newfoundland = false;
+    private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
     private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
+    private int empty_count = 0;
     private String strategy;
     protected int uTurnStep = 5;
 
@@ -20,11 +21,13 @@ public class DroneStrategy {
     // Method to find land
     public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
         // if MVP search land
-        if (strategy.equals("findLand")){
+        if (strategy.equals("findLand") && !doGridSearch){
             return findLand(batteryLevel, radarResults, scanResults);
+        } else {
+            return gridSearch(batteryLevel, radarResults, scanResults);
         }
         // else temporarily return empty string
-        return "";
+        //return "";
     }
 
     private String findLand(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
@@ -37,16 +40,7 @@ public class DroneStrategy {
         if (batteryLevel < 100) { // If battery is low, stop mission
             decision = "stop"; // stop
         }
-        if (left) {
-            decision = "left";
-            left = false;
-            turned_left = !turned_left;
-        }
-        else if (right) {
-            decision = "right";
-            right = false;
-            turned_left = !turned_left;
-        }
+       
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
         }
@@ -72,7 +66,10 @@ public class DroneStrategy {
                 decision = "fly"; // fly [S]outh to coast
             }
             else { // if rangeValue < 2
-                decision = "stop"; // stop
+                //decision = "stop"; // stop
+                
+                decision = "fly";
+                doGridSearch = true;
             }
         }
 
@@ -98,6 +95,18 @@ public class DroneStrategy {
         if (batteryLevel < 100) { // If battery is low, stop mission
             decision = "stop"; // stop
         }
+
+        if (left) {
+            decision = "left";
+            left = false;
+            turned_left = !turned_left;
+        }
+        else if (right) {
+            decision = "right";
+            right = false;
+            turned_left = !turned_left;
+        }
+        
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
         }
@@ -105,9 +114,11 @@ public class DroneStrategy {
             decision = "echo front";
             if (radarResults.getString("found").equals("GROUND")) {
                 land = true;
+                empty_count--;
             }
             else {
                 land = false;
+                empty_count++;
             }
         }
         else if (land == true) { // ocean search phase
@@ -115,11 +126,11 @@ public class DroneStrategy {
         }
         else { // land is found not found(out of range)
             if (!turned_left) {
-                decision = "left";
+                decision = "heading left";
                 left = true;
             }
             else {
-                decision = "right";
+                decision = "heading right";
                 right = true;
             }
         }
@@ -135,8 +146,9 @@ public class DroneStrategy {
             scanned = false;
             radared = false;
         }
-
-
+        if (empty_count > 3) {
+            decision = "stop";
+        }
 
         return decision;
     }
@@ -155,7 +167,6 @@ public class DroneStrategy {
         JSONObject decision = new JSONObject();
         JSONObject parameters = new JSONObject();
         String[] steps = new String[5];
-
 
         if (direction == "N"){
             steps = new String[]{"W", "N", "E", "E", "S"};

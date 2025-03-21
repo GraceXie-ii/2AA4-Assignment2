@@ -55,7 +55,7 @@ public class Explorer implements IExplorerRaid {
         // Refreshed window to fix compiler not recognizing strategy.getStrategy
         String decision = strategy.getStrategy(info.getInt("budget"), radar.getRadarInfo(), scanner.getScanInfo());
 
-        // command drone by decision
+        // translate drone command strings to function calls, update drone position if heading or fly
         if (decision.equals("stop")) {
             decision = move.stop();
         }
@@ -119,7 +119,7 @@ public class Explorer implements IExplorerRaid {
             }
 
             // if site exists and NOT in sitesIDs, store site ID and coordinates
-            for (int j = 0; j < extraInfo.getJSONArray("creeks").length(); j++) {
+            for (int j = 0; j < extraInfo.getJSONArray("sites").length(); j++) {
                 if (position.getSitesID().contains(extraInfo.getJSONArray("sites").getString(j)) == false) {
                     position.addSite(extraInfo.getJSONArray("sites").getString(j), position.getCoordinates());
                 }
