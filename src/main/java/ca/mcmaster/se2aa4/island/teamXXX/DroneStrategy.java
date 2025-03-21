@@ -75,10 +75,12 @@ public class DroneStrategy {
                 decision = "fly"; // fly [S]outh to coast
             }
             else { // if rangeValue < 2
-                //decision = "stop"; // stop
+                // only find land
+                decision = "stop"; // stop
                 
-                decision = "fly";
-                doGridSearch = true;
+                // link to grid search
+                //decision = "fly";
+                //doGridSearch = true;
             }
         }
 
