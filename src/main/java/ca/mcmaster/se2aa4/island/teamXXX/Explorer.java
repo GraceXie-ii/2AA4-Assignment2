@@ -110,15 +110,19 @@ public class Explorer implements IExplorerRaid {
         // If scan, creeks and sites values are present, update them in scanner
         else if (extraInfo.has("creeks")||extraInfo.has("sites")) {
             scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
-            
-            // if creek exists, store creek ID and coordinates
+
+            // if creek exists and NOT in creekIDs, store creek ID and coordinates
             for (int i = 0; i < extraInfo.getJSONArray("creeks").length(); i++) {
-                position.addCreek(extraInfo.getJSONArray("creeks").getString(i), position.getCoordinates());
+                if (position.getCreeksID().contains(extraInfo.getJSONArray("creeks").getString(i)) == false) {
+                    position.addCreek(extraInfo.getJSONArray("creeks").getString(i), position.getCoordinates());
+                }
             }
 
-            // if site exists, store site ID and coordinates
+            // if site exists and NOT in sitesIDs, store site ID and coordinates
             for (int j = 0; j < extraInfo.getJSONArray("creeks").length(); j++) {
-                position.addSite(extraInfo.getJSONArray("sites").getString(j), position.getCoordinates());
+                if (position.getSitesID().contains(extraInfo.getJSONArray("sites").getString(j)) == false) {
+                    position.addSite(extraInfo.getJSONArray("sites").getString(j), position.getCoordinates());
+                }
             }
         }
 
