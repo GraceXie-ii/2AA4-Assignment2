@@ -10,7 +10,8 @@ public class Radar {
     private JSONObject frontRadar, leftRadar, rightRadar;
 
     // Declare variables to keep track of the last direction and orientation of the radar echo
-    private String lastDir, lastOrientation;
+    private String lastOrientation;
+    private Direction lastDir;
 
     // Declare final variables to store the four directions
     public enum Direction{
@@ -31,11 +32,11 @@ public class Radar {
         this.frontRadar = new JSONObject();
         this.leftRadar = new JSONObject();
         this.rightRadar = new JSONObject();
-        this.lastDir = "E";
+        this.lastDir = Direction.E;
         this.lastOrientation = "FRONT";
     }
 
-    public String sendRadarSignal(String direction, String droneDir){
+    public String sendRadarSignal(String direction, Direction droneDir){
         JSONObject decision = new JSONObject(); // create new JSON object - decision
         JSONObject parameters = new JSONObject(); // create new JSON object - parameters
 
