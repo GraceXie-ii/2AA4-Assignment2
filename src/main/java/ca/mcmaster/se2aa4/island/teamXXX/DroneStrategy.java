@@ -8,7 +8,7 @@ public class DroneStrategy {
     private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
     private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
     private String strategy;
-    protected int uTurnStep = 0;
+    protected int uTurnStep = 5;
 
     // Constructor to allow strategy choice
     public DroneStrategy(String strategy) {
@@ -155,77 +155,19 @@ public class DroneStrategy {
     public String uTurn(String direction){
         JSONObject decision = new JSONObject();
         JSONObject parameters = new JSONObject();
+        String[] steps = new String[5];
 
         if (direction == "N"){
-            if(uTurnStep == 0){
-                decision.put("action", "heading");
-                parameters.put("direction", "W");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 1){
-                decision.put("action", "heading");
-                parameters.put("direction", "N");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 2){
-                decision.put("action", "heading");
-                parameters.put("direction", "E");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 3){
-                decision.put("action", "heading");
-                parameters.put("direction", "E");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 4){
-                decision.put("action", "heading");
-                parameters.put("direction", "S");
-                decision.put("parameters", parameters);
-                uTurnStep = 0;
-            }
-            else{
-                System.out.println("Invalid direction");
-            }
+            steps = new String[]{"W", "N", "E", "E", "S"};
         }else if(direction == "S"){
-            if(uTurnStep == 0){
-                decision.put("action", "heading");
-                parameters.put("direction", "W");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 1){
-                decision.put("action", "heading");
-                parameters.put("direction", "S");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 2){
-                decision.put("action", "heading");
-                parameters.put("direction", "E");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 3){
-                decision.put("action", "heading");
-                parameters.put("direction", "E");
-                decision.put("parameters", parameters);
-                uTurnStep++;
-            }
-            else if(uTurnStep == 4){
-                decision.put("action", "heading");
-                parameters.put("direction", "N");
-                decision.put("parameters", parameters);
-                uTurnStep = 0;
-            }
-            else{
-                System.out.println("Invalid direction");
-            }
+            steps = new String[]{"E", "S", "W", "W", "N"};
         }
 
+        for (int i = 0; i < uTurnStep; i++){
+            decision.put("action", "heading");
+            parameters.put("direction", steps[i]);
+            decision.put("parameters", parameters);
+        }
         return decision.toString();
     }
 
