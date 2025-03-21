@@ -53,7 +53,7 @@ public class Explorer implements IExplorerRaid {
     public String takeDecision() {
         // Initialize the decision JSON object as a string, and get decision from strategy
         // Refreshed window to fix compiler not recognizing strategy.getStrategy
-        String decision = strategy.getStrategy(info.getInt("budget"), radar.getRadarInfo());
+        String decision = strategy.getStrategy(info.getInt("budget"), radar.getRadarInfo(), scanner.getScanInfo());
 
         // command drone by decision
         if (decision.equals("stop")) {

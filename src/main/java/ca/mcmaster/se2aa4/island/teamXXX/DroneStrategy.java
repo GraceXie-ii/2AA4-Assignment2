@@ -17,16 +17,16 @@ public class DroneStrategy {
     }
 
     // Method to find land
-    public String getStrategy(int batteryLevel, JSONObject radarResults) {
+    public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
         // if MVP search land
         if (strategy.equals("findLand")){
-            return findLand(batteryLevel, radarResults);
+            return findLand(batteryLevel, radarResults, scanResults);
         }
         // else temporarily return empty string
         return "";
     }
 
-    private String findLand(int batteryLevel, JSONObject radarResults) {
+    private String findLand(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
         // JSONObject is used to delay getting data from radar, to when data is actually collected and available
         // Initialize the decision JSON object as a string
         String decision = "";
@@ -91,7 +91,7 @@ public class DroneStrategy {
         return decision;
     }
 
-    public String gridSearch(int batteryLevel, JSONObject radarResults) {
+    public String gridSearch(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
         String decision = "";
 
         if (batteryLevel < 100) { // If battery is low, stop mission
@@ -140,7 +140,7 @@ public class DroneStrategy {
         return decision;
     }
 
-    public String coastSearch(int batteryLevel, JSONObject radarResults){
+    public String coastSearch(int batteryLevel, JSONObject radarResults, JSONObject scanResults){
         String decision = "";
 
         if (batteryLevel < 100) { // If battery is low, stop mission
