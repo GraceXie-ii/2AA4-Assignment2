@@ -13,7 +13,17 @@ public class Radar {
     private String lastDir, lastOrientation;
 
     // Declare final variables to store the four directions
-    private final String directions = "NESW";
+    public enum Direction{
+        N, E, S, W;
+    
+        public Direction turnLeft(){
+            return Direction.values()[(this.ordinal() + 3) % 4];
+        }
+
+        public Direction turnRight(){
+            return Direction.values()[(this.ordinal() + 1) % 4];
+        }
+    }
 
 
     public Radar(){
@@ -25,17 +35,17 @@ public class Radar {
         this.lastOrientation = "FRONT";
     }
 
-    public String sendRadarSingal(String direction, String droneDir){
+    public String sendRadarSignal(String direction, String droneDir){
         JSONObject decision = new JSONObject(); // create new JSON object - decision
         JSONObject parameters = new JSONObject(); // create new JSON object - parameters
 
         // Calculate direction of echo based on current drone direction, update last direction, LEFT/FRONT/RIGHT -> NESW
         if (direction.equals("LEFT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir) + 3) % 4) + "";
+            lastDir = droneDir.turnLeft();
         } else if (direction.equals("RIGHT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir) + 1) % 4) + "";
+            lastDir = droneDir.turnRight();
         } else if (direction.equals("FRONT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir))) + "";
+            lastDir = droneDir;
         }
 
         // Store last orientation, FRONT/LEFT/RIGHT
