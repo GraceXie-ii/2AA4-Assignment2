@@ -24,6 +24,7 @@ public class Explorer implements IExplorerRaid {
     private Radar radar;
     private PhotoScanner scanner;
     private DroneStrategy strategy;
+    private Position position;
 
     @Override
     public void initialize(String s) {
@@ -38,11 +39,12 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
-        // Initialize drone direction, basic movements, radar, scanner, and strategy set to find land
+        // Initialize drone direction, basic movements, radar, scanner, position, and strategy set to find land
         droneDir = new Direction(direction);
         move = new Move();
         radar = new Radar();
         scanner = new PhotoScanner();
+        position = new Position();
         strategy = new DroneStrategy("findLand");
 
     }
@@ -70,13 +72,16 @@ public class Explorer implements IExplorerRaid {
             decision = radar.sendRadarSignal("LEFT", droneDir.ifTurn("LEFT"));
         }
         else if (decision.equals("heading right")) {
-            decision = move.heading(droneDir.turn("R"), droneDir.getDirectionVector("R"));
+            decision = move.heading(droneDir.turn("R"));
+            position.updatePosition(droneDir.getDirectionVector("R"));
         }
         else if (decision.equals("heading left")) {
-            decision = move.heading(droneDir.turn("L"), droneDir.getDirectionVector("L"));
+            decision = move.heading(droneDir.turn("L"));
+            position.updatePosition(droneDir.getDirectionVector("L"));
         }
         else if (decision.equals("fly")) {
-            decision = move.fly(droneDir.getDirectionVector());
+            decision = move.fly();
+            position.updatePosition(droneDir.getDirectionVector());
         }
 
         // Log the decision
@@ -105,10 +110,19 @@ public class Explorer implements IExplorerRaid {
         // If scan, creeks and sites values are present, update them in scanner
         else if (extraInfo.has("creeks")||extraInfo.has("sites")) {
             scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
-            // store creek or site id, current drone position 
+            
+            // if creek exists, store creek ID and coordinates
+            for (int i = 0; i < extraInfo.getJSONArray("creeks").length(); i++) {
+                position.addCreek(extraInfo.getJSONArray("creeks").getString(i), position.getCoordinates());
+            }
+
+            // if site exists, store site ID and coordinates
+            for (int j = 0; j < extraInfo.getJSONArray("creeks").length(); j++) {
+                position.addSite(extraInfo.getJSONArray("sites").getString(j), position.getCoordinates());
+            }
         }
 
-        logger.info("The drone position is {}", move.getCoordinates());
+        logger.info("The drone position is {}", position.getCoordinates());
     }
 
     @Override
