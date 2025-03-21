@@ -6,7 +6,7 @@ public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
-    private boolean land = true, left = false, right = false, turned_left = false;
+    private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
     private int empty_count = 0;
     private String strategy;
     protected int uTurnStep = 5;
@@ -40,16 +40,7 @@ public class DroneStrategy {
         if (batteryLevel < 100) { // If battery is low, stop mission
             decision = "stop"; // stop
         }
-        if (left) {
-            decision = "left";
-            left = false;
-            turned_left = !turned_left;
-        }
-        else if (right) {
-            decision = "right";
-            right = false;
-            turned_left = !turned_left;
-        }
+       
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
         }
@@ -104,6 +95,18 @@ public class DroneStrategy {
         if (batteryLevel < 100) { // If battery is low, stop mission
             decision = "stop"; // stop
         }
+
+        if (left) {
+            decision = "left";
+            left = false;
+            turned_left = !turned_left;
+        }
+        else if (right) {
+            decision = "right";
+            right = false;
+            turned_left = !turned_left;
+        }
+        
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
         }
