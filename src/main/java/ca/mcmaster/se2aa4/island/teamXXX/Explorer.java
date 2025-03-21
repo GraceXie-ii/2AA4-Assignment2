@@ -70,13 +70,13 @@ public class Explorer implements IExplorerRaid {
             decision = radar.sendRadarSignal("LEFT", droneDir.ifTurn("LEFT"));
         }
         else if (decision.equals("heading right")) {
-            decision = move.heading(droneDir.turn("R"));
+            decision = move.heading(droneDir.turn("R"), droneDir.getDirectionVector("R"));
         }
         else if (decision.equals("heading left")) {
-            decision = move.heading(droneDir.turn("L"));
+            decision = move.heading(droneDir.turn("L"), droneDir.getDirectionVector("L"));
         }
         else if (decision.equals("fly")) {
-            decision = move.fly();
+            decision = move.fly(droneDir.getDirectionVector());
         }
 
         // Log the decision
@@ -106,6 +106,8 @@ public class Explorer implements IExplorerRaid {
         else if (extraInfo.has("creeks")||extraInfo.has("sites")) {
             scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
         }
+
+        logger.info("The drone position is {}", move.getCoordinates());
     }
 
     @Override

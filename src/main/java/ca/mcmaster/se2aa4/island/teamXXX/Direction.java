@@ -4,10 +4,27 @@ public class Direction {
     // Initialize drone direction, final list of directions
     private String droneDir;
     private static final String DIRECTIONS = "NESW";
+    private static final int[][] DIRECTION_VECTOR = new int[][]{{0, -10}, {10, 0}, {0, 10}, {-10, 0}};
 
     // Constructor to initialize drone direction
     public Direction(String direction) {
         this.droneDir = direction;
+    }
+
+    // get current drone direction vector = [x, y] for fly
+    public int[] getDirectionVector() {
+        return DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)];
+    }
+
+    // get new direction vector after heading
+    public int[] getDirectionVector(String turn) {
+        // calculate new direction vector = fly forward + fly in turn direction
+        int x = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][0] + DIRECTION_VECTOR[DIRECTIONS.indexOf(ifTurn(turn))][0];
+        int y = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][1] + DIRECTION_VECTOR[DIRECTIONS.indexOf(ifTurn(turn))][1];
+
+        // return new direction vector after turn
+        int[] vector = new int[] {x, y};
+        return vector;
     }
 
     // for heading
