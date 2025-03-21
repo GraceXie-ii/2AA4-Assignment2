@@ -19,7 +19,6 @@ public class Explorer implements IExplorerRaid {
     private JSONObject info;
 
     // private classes of sub-classes
-    //Drone drone;
     private Direction droneDir;
     private Move move;
     private Radar radar;
