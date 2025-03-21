@@ -7,8 +7,8 @@ public class Move {
     private int x, y; // drone coordinates
 
     public Move() {
-        this.x = 0; // set x coordinate to 1
-        this.y = 0; // set y coordinate to 1
+        this.x = 1; // set x coordinate to 1
+        this.y = 1; // set y coordinate to 1
     }
 
     // return drone coordinates
