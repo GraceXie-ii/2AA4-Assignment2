@@ -1,28 +1,40 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
-enum Direction {
-  NORTH, SOUTH, EAST, WEST;
+class Direction {
+  private String direction;
+  private static final String[] DIRECTIONS = {"NORTH", "EAST", "SOUTH", "WEST"};
 
-  public Direction turnLeft() {
-    switch (this) {
-        case NORTH: return WEST;
-        case WEST: return SOUTH;
-        case SOUTH: return EAST;
-        case EAST: return NORTH;
-        default: throw new IllegalStateException("Unexpected value: " + this);
-    }
+  public Direction(String direction) {
+      this.direction = direction;
+  }
+
+  public String turn(String turn) {
+      if (turn.equals("left")) {
+          return turnLeft();
+      }
+      return turnRight();
+  }
+
+  private String turnLeft() {
+      int index = findIndex(direction);
+      index = (index + 3) % 4; // Move counter-clockwise
+      direction = DIRECTIONS[index];
+      return direction;
+  }
+
+  private String turnRight() {
+      int index = findIndex(direction);
+      index = (index + 1) % 4; // Move clockwise
+      direction = DIRECTIONS[index];
+      return direction;
+  }
+
+  private int findIndex(String dir) {
+      for (int i = 0; i < DIRECTIONS.length; i++) {
+          if (DIRECTIONS[i].equals(dir)) {
+              return i;
+          }
+      }
+      throw new IllegalArgumentException("Invalid direction: " + dir);
+  }
 }
-
-// Turning right (clockwise)
-public Direction turnRight() {
-    switch (this) {
-        case NORTH: return EAST;
-        case EAST: return SOUTH;
-        case SOUTH: return WEST;
-        case WEST: return NORTH;
-        default: throw new IllegalStateException("Unexpected value: " + this);
-    }
-}
-
-}
-
