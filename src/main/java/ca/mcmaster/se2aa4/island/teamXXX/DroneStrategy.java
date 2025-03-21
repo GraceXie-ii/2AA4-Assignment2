@@ -6,7 +6,8 @@ public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
-    private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
+    private boolean land = true, left = false, right = false, turned_left = false;
+    private int empty_count = 0;
     private String strategy;
     protected int uTurnStep = 5;
 
@@ -110,9 +111,11 @@ public class DroneStrategy {
             decision = "echo front";
             if (radarResults.getString("found").equals("GROUND")) {
                 land = true;
+                empty_count--;
             }
             else {
                 land = false;
+                empty_count++;
             }
         }
         else if (land == true) { // ocean search phase
@@ -139,6 +142,9 @@ public class DroneStrategy {
         else if (scanned && radared) {
             scanned = false;
             radared = false;
+        }
+        if (empty_count > 3) {
+            decision = "stop";
         }
 
         return decision;
