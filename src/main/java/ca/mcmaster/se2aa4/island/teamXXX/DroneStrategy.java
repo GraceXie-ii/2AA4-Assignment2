@@ -79,5 +79,11 @@ public class DroneStrategy {
         // return command string decision
         return decision;
     }
+
+    public String coastSearch(int batteryLevel, JSONObject radarResults){
+        String decision = "";
+
+        return decision;
+    }
     
 }
