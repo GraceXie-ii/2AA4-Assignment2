@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Drone implements FlyMachine{
+public class Drone {
 
     // private classes to keep track of extra information
     private Radar radar;
