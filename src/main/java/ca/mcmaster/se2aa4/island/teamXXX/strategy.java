@@ -26,6 +26,7 @@ public class Strategy {
     }
 
     private String findLand(int batteryLevel, JSONObject radarResults) {
+        // JSONObject is used to delay getting data from radar, to when data is actually collected and available
         // Initialize the decision JSON object as a string
         String decision = "";
 
@@ -75,6 +76,7 @@ public class Strategy {
             radared = false;
         }
 
+        // return command string decision
         return decision;
     }
     

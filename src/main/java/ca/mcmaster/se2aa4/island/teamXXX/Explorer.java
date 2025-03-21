@@ -25,9 +25,6 @@ public class Explorer implements IExplorerRaid {
     private PhotoScanner scanner;
     private Strategy strategy;
 
-    // Private variables to keep track of the state of the exploration
-    //private boolean scanned = false, radared = false, Newfoundland = false;
-
     @Override
     public void initialize(String s) {
         // create new JSON reader info
@@ -41,7 +38,7 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
-        // Initialize drone direction, basic movements, radar, and scanner
+        // Initialize drone direction, basic movements, radar, scanner, and strategy set to find land
         droneDir = new Direction(direction);
         move = new Move();
         radar = new Radar();
