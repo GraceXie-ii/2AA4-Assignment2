@@ -10,10 +10,21 @@ public class Radar {
     private JSONObject frontRadar, leftRadar, rightRadar;
 
     // Declare variables to keep track of the last direction and orientation of the radar echo
-    private String lastDir, lastOrientation;
+    private String lastOrientation;
+    private Direction lastDir;
 
     // Declare final variables to store the four directions
-    private final String directions = "NESW";
+    public enum Direction{
+        N, E, S, W;
+    
+        public Direction turnLeft(){
+            return Direction.values()[(this.ordinal() + 3) % 4];
+        }
+
+        public Direction turnRight(){
+            return Direction.values()[(this.ordinal() + 1) % 4];
+        }
+    }
 
 
     public Radar(){
@@ -21,21 +32,21 @@ public class Radar {
         this.frontRadar = new JSONObject();
         this.leftRadar = new JSONObject();
         this.rightRadar = new JSONObject();
-        this.lastDir = "E";
+        this.lastDir = Direction.E;
         this.lastOrientation = "FRONT";
     }
 
-    public String sendRadarSingal(String direction, String droneDir){
+    public String sendRadarSignal(String direction, Direction droneDir){
         JSONObject decision = new JSONObject(); // create new JSON object - decision
         JSONObject parameters = new JSONObject(); // create new JSON object - parameters
 
         // Calculate direction of echo based on current drone direction, update last direction, LEFT/FRONT/RIGHT -> NESW
         if (direction.equals("LEFT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir) + 3) % 4) + "";
+            lastDir = droneDir.turnLeft();
         } else if (direction.equals("RIGHT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir) + 1) % 4) + "";
+            lastDir = droneDir.turnRight();
         } else if (direction.equals("FRONT")) {
-            lastDir = directions.charAt((directions.indexOf(droneDir))) + "";
+            lastDir = droneDir;
         }
 
         // Store last orientation, FRONT/LEFT/RIGHT
