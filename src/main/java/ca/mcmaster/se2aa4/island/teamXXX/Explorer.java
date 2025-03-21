@@ -103,7 +103,7 @@ public class Explorer implements IExplorerRaid {
             radar.processRadarResponse(extraInfo.getString("found"), extraInfo.getInt("range"));
         }
         // If scan, creeks and sites values are present, update them in scanner
-        else if (extraInfo.has("creeks")) {
+        else if (extraInfo.has("creeks")||extraInfo.has("sites")) {
             scanner.processScanResponse(extraInfo.getJSONArray("creeks"), extraInfo.getJSONArray("sites"));
         }
     }
