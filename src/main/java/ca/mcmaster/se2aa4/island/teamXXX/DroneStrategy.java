@@ -6,6 +6,7 @@ public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false;
+    private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
     private String strategy;
 
     // Constructor to allow strategy choice
@@ -34,6 +35,16 @@ public class DroneStrategy {
         // If battery is low, stop mission; ocean search phase - scan/radar S/move E; ground phase - move S/stop
         if (batteryLevel < 100) { // If battery is low, stop mission
             decision = "stop"; // stop
+        }
+        if (left) {
+            decision = "left";
+            left = false;
+            turned_left = !turned_left;
+        }
+        else if (right) {
+            decision = "right";
+            right = false;
+            turned_left = !turned_left;
         }
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
@@ -80,6 +91,55 @@ public class DroneStrategy {
         return decision;
     }
 
+    public String gridSearch(int batteryLevel, JSONObject radarResults) {
+        String decision = "";
+
+        if (batteryLevel < 100) { // If battery is low, stop mission
+            decision = "stop"; // stop
+        }
+        else if (scanned == false) { // If not scanned, scan
+            decision = "scan"; // scan
+        }
+        else if (radared == false) { // If not radared, radar
+            decision = "echo front";
+            if (radarResults.getString("found").equals("GROUND")) {
+                land = true;
+            }
+            else {
+                land = false;
+            }
+        }
+        else if (land == true) { // ocean search phase
+            decision = "fly";
+        }
+        else { // land is found not found(out of range)
+            if (!turned_left) {
+                decision = "left";
+                left = true;
+            }
+            else {
+                decision = "right";
+                right = true;
+            }
+        }
+
+        // rotate strategy state: scan, radar, fly/heading/stop
+        if (!scanned && !radared) {
+            scanned = true;
+        }
+        else if (scanned && !radared) {
+            radared = true;
+        }
+        else if (scanned && radared) {
+            scanned = false;
+            radared = false;
+        }
+
+
+
+        return decision;
+    }
+
     public String coastSearch(int batteryLevel, JSONObject radarResults){
         String decision = "";
 
@@ -87,7 +147,7 @@ public class DroneStrategy {
             decision = "stop"; // stop
         }
 
-        
+
 
         return decision;
     }
