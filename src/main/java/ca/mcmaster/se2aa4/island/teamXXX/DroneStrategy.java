@@ -83,6 +83,12 @@ public class DroneStrategy {
     public String coastSearch(int batteryLevel, JSONObject radarResults){
         String decision = "";
 
+        if (batteryLevel < 100) { // If battery is low, stop mission
+            decision = "stop"; // stop
+        }
+
+        
+
         return decision;
     }
     
