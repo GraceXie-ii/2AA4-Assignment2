@@ -75,6 +75,8 @@ public class DroneStrategy {
             }
             else { // if rangeValue < 2
                 //decision = "stop"; // stop
+                
+                decision = "fly";
                 doGridSearch = true;
             }
         }

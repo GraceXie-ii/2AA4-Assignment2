@@ -119,7 +119,7 @@ public class Explorer implements IExplorerRaid {
             }
 
             // if site exists and NOT in sitesIDs, store site ID and coordinates
-            for (int j = 0; j < extraInfo.getJSONArray("creeks").length(); j++) {
+            for (int j = 0; j < extraInfo.getJSONArray("sites").length(); j++) {
                 if (position.getSitesID().contains(extraInfo.getJSONArray("sites").getString(j)) == false) {
                     position.addSite(extraInfo.getJSONArray("sites").getString(j), position.getCoordinates());
                 }

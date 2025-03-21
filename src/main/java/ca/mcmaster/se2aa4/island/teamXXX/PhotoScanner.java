@@ -23,13 +23,13 @@ public class PhotoScanner {
     public void processScanResponse(JSONArray creeks, JSONArray sites) {
         // If creeks and sites not in this.creeks and this.sites, add them
         for (int i = 0; i < creeks.length(); i++) {
-            if (!this.creeks.toString().contains(creeks.getJSONObject(i).toString())) {
-                this.creeks.put(creeks.getJSONObject(i));
+            if (!this.creeks.toString().contains(creeks.toString())) {
+                this.creeks.put(creeks);
             }
         }
         for (int i = 0; i < sites.length(); i++) {
-            if (!this.sites.toString().contains(sites.getJSONObject(i).toString())) {
-                this.sites.put(sites.getJSONObject(i));
+            if (!this.sites.toString().contains(sites.toString())) {
+                this.sites.put(sites);
             }
         }
     }
