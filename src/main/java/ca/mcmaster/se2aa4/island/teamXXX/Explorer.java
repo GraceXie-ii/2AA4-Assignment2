@@ -55,7 +55,7 @@ public class Explorer implements IExplorerRaid {
         // Refreshed window to fix compiler not recognizing strategy.getStrategy
         String decision = strategy.getStrategy(info.getInt("budget"), radar.getRadarInfo(), scanner.getScanInfo());
 
-        // command drone by decision
+        // translate drone command strings to function calls, update drone position if heading or fly
         if (decision.equals("stop")) {
             decision = move.stop();
         }

@@ -37,6 +37,13 @@ public class Position {
         return this.sitesID; // return sites ID
     }
 
+    // Find nearest creek index to the site
+    public int findNearestCreekIndex() {
+        
+        return 0;
+
+    }
+
     // update drone position
     public void updatePosition(int[] direction_vector) {
         this.x += direction_vector[0];

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class DroneStrategy {
 
     // Private variables to keep track of the state of the exploration
-    private boolean scanned = false, radared = false, Newfoundland = false;
+    private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
     private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
     private String strategy;
     protected int uTurnStep = 0;
@@ -20,11 +20,13 @@ public class DroneStrategy {
     // Method to find land
     public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
         // if MVP search land
-        if (strategy.equals("findLand")){
+        if (strategy.equals("findLand") && !doGridSearch){
             return findLand(batteryLevel, radarResults, scanResults);
+        } else {
+            return gridSearch(batteryLevel, radarResults, scanResults);
         }
         // else temporarily return empty string
-        return "";
+        //return "";
     }
 
     private String findLand(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
@@ -72,7 +74,8 @@ public class DroneStrategy {
                 decision = "fly"; // fly [S]outh to coast
             }
             else { // if rangeValue < 2
-                decision = "stop"; // stop
+                //decision = "stop"; // stop
+                doGridSearch = true;
             }
         }
 
@@ -115,11 +118,11 @@ public class DroneStrategy {
         }
         else { // land is found not found(out of range)
             if (!turned_left) {
-                decision = "left";
+                decision = "heading left";
                 left = true;
             }
             else {
-                decision = "right";
+                decision = "heading right";
                 right = true;
             }
         }
@@ -136,8 +139,6 @@ public class DroneStrategy {
             radared = false;
         }
 
-
-
         return decision;
     }
 
@@ -148,15 +149,12 @@ public class DroneStrategy {
             decision = "stop"; // stop
         }
 
-
-
         return decision;
     }
     
     public String uTurn(String direction){
         JSONObject decision = new JSONObject();
         JSONObject parameters = new JSONObject();
-
 
         if (direction == "N"){
             if(uTurnStep == 0){
