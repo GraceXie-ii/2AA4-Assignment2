@@ -66,8 +66,14 @@ public class Explorer implements IExplorerRaid {
         else if (decision.equals("echo front")) {
             decision = radar.sendRadarSignal("FRONT", droneDir.ifTurn("FRONT"));
         }
+        else if (decision.equals("echo left")) {
+            decision = radar.sendRadarSignal("LEFT", droneDir.ifTurn("LEFT"));
+        }
         else if (decision.equals("heading right")) {
             decision = move.heading(droneDir.turn("R"));
+        }
+        else if (decision.equals("heading left")) {
+            decision = move.heading(droneDir.turn("L"));
         }
         else if (decision.equals("fly")) {
             decision = move.fly();
