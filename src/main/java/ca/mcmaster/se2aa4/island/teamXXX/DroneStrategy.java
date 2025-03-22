@@ -7,9 +7,10 @@ public class DroneStrategy {
     // Private variables to keep track of the state of the exploration
     private String strategy; // strategy choice
     private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false; // find land
-    private boolean land = true, left = false, right = false, turned_left = false;// turned_right = false; // grid search
     private int empty_count = 0;
     protected int uTurnStep = 5; // u turn
+    private boolean land = true, left = false, right = false, turned_left = false, turned_right = false; // grid search
+    private boolean empty_check = false;
 
     // Constructor to allow strategy choice
     public DroneStrategy(String strategy) {
@@ -72,8 +73,8 @@ public class DroneStrategy {
                 decision = "stop"; // stop
                 
                 // link to grid search
-                //decision = "fly";
-                //doGridSearch = true;
+                decision = "fly";
+                doGridSearch = true;
             }
         }
 
@@ -227,29 +228,30 @@ public class DroneStrategy {
             decision = "heading left";
             left = false;
             turned_left = !turned_left;
+            scanned = false;
+            radared = false;
         }
         else if (right) {
             decision = "heading right";
             right = false;
             turned_left = !turned_left;
+            scanned = false;
+            radared = false;
         }
-        
+
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
+            scanned = true;
         }
         else if (radared == false) { // If not radared, radar
             decision = "echo front";
-            if (radarResults.getString("found").equals("GROUND")) {
-                land = true;
-                empty_count--;
-            }
-            else {
-                land = false;
-                empty_count++;
-            }
+            radared = true;
+            
         }
-        else if (land == true) { // ocean search phase
+        else if (land == true) { // search on island
             decision = "fly";
+            scanned = false;
+            radared = false;
         }
         else { // land is found not found(out of range)
             if (!turned_left) {
@@ -262,19 +264,21 @@ public class DroneStrategy {
             }
         }
 
-        // rotate strategy state: scan, radar, fly/heading/stop
-        if (!scanned && !radared) {
-            scanned = true;
+        if (radarResults.getString("found").equals("GROUND")) {
+            land = true;
+            if (empty_check) {
+                empty_check = false;
+            }
+
         }
-        else if (scanned && !radared) {
-            radared = true;
-        }
-        else if (scanned && radared) {
-            scanned = false;
-            radared = false;
-        }
-        if (empty_count > 3) {
-            decision = "stop";
+        else {
+            land = false;
+            if (!empty_check){
+                empty_check = true;
+            }
+            else {
+                decision = "stop";
+            }
         }
 
         return decision;
