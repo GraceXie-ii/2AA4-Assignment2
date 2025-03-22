@@ -164,6 +164,13 @@ public class Explorer implements IExplorerRaid {
             report += "At [x, y]: " + String.valueOf(sitesCoors.get(j)[0]) + ", " + String.valueOf(sitesCoors.get(j)[1]) + "\n";
         }
 
+        // Get closest creek # and distance
+        int closestCreekID = (int) (position.findNearestCreek()[0]);
+        double closestCreekDistance = position.findNearestCreek()[1];
+
+        // Add to report
+        report += "The closest creek was creek #" + String.valueOf(closestCreekID+1) + ", with a distance of " + String.valueOf(closestCreekDistance) + "\n";
+
         // temporary to see format
         logger.info("Final Report:\n {}", report);
 

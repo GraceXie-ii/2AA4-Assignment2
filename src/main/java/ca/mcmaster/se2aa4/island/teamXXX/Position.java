@@ -53,10 +53,43 @@ public class Position {
     }
 
     // Find nearest creek index to the site
-    public int findNearestCreekIndex() {
-        
-        return 0;
+    public double[] findNearestCreek() {
 
+        // temporary variables
+        double closestDistance = 0, currentDistance, closestIndex = 0, creekX, creekY, siteX, siteY;
+
+        // get site coordinates
+        siteX = this.sitesCoordinates.get(0)[0];
+        siteY = this.sitesCoordinates.get(0)[1];
+        
+        for (int i = 0; i < this.creeksCoordinates.size(); i++) {
+            // get creek coordinates
+            creekX = this.creeksCoordinates.get(i)[0];
+            creekY = this.creeksCoordinates.get(i)[1];
+
+            // find creek distance to site
+            currentDistance = findDistance(creekX, creekY, siteX, siteY);
+
+            // set if first creek, else compare with closest
+            if (i == 0) {
+                closestDistance = currentDistance;
+            } else if (currentDistance < closestDistance) {
+                closestDistance = currentDistance;
+                closestIndex = i;
+            }
+        }
+        
+        // return closest creek index in list, and its distance to site
+        return new double[] {closestIndex, closestDistance};
+
+    }
+
+    // get distance between a creek and a site
+    private double findDistance(double x1, double y1, double x2, double y2) {
+        double xSide = Math.pow(x2-x1, 2);
+        double ySide = Math.pow(y2-y1, 2);
+        double total = Math.sqrt(xSide + ySide);
+        return total;
     }
 
     // update drone position
