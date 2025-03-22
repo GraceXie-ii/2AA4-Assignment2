@@ -154,7 +154,7 @@ public class Explorer implements IExplorerRaid {
 
         // append the emergency site and coordinate
         for (int j = 0; j < sitesID.size(); j++) {
-            report += "\tSite #" + String.valueOf(j + 1) + ": ";
+            report += "Found Site #" + String.valueOf(j + 1) + ": ";
             report += "uid: " + sitesID.get(j) + ", ";
             report += "At [x, y]: " + String.valueOf(sitesCoors.get(j)[0]) + ", " + String.valueOf(sitesCoors.get(j)[1]) + "\n";
         }
