@@ -37,6 +37,16 @@ public class Position {
         return this.sitesID; // return sites ID
     }
 
+    // get creeks coordinates
+    public List<int[]> getCreeksCoordinates() {
+        return this.creeksCoordinates;
+    }
+
+    // get sites coordinates
+    public List<int[]> getSitesCoordinates() {
+        return this.sitesCoordinates;
+    }
+
     // Find nearest creek index to the site
     public int findNearestCreekIndex() {
         

@@ -24,8 +24,9 @@ public class Direction {
     // get new direction vector after heading
     public int[] getDirectionVector(String turn) {
         // calculate new direction vector = fly forward + fly in turn direction
-        int x = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][0] + DIRECTION_VECTOR[DIRECTIONS.indexOf(ifTurn(turn))][0];
-        int y = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][1] + DIRECTION_VECTOR[DIRECTIONS.indexOf(ifTurn(turn))][1];
+        String newDir = ifTurn(turn); // get direction after turn 
+        int x = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][0] + DIRECTION_VECTOR[DIRECTIONS.indexOf(newDir)][0];
+        int y = DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)][1] + DIRECTION_VECTOR[DIRECTIONS.indexOf(newDir)][1];
 
         // return new direction vector after turn
         int[] vector = new int[] {x, y};

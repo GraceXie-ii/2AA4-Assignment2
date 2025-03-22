@@ -1,6 +1,7 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
 import java.io.StringReader;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -135,7 +136,33 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
-       return "no creek found";
+        //return "no creek found";
+        String report = "The following creeks were found:\n";
+
+        // Get creeks and sites - ID's and Coordinates
+        List<String> creeksID = position.getCreeksID();
+        List<String> sitesID = position.getSitesID();
+        List<int[]> creeksCoors = position.getCreeksCoordinates();
+        List<int[]> sitesCoors = position.getSitesCoordinates();
+
+        // append creek ID's and coordinates
+        for (int i = 0; i < creeksID.size(); i++) {
+            report += "\tCreek #" + String.valueOf(i + 1) + ": ";
+            report += "uid: " + creeksID.get(i) + ", ";
+            report += "At [x, y]: " + String.valueOf(creeksCoors.get(i)[0]) + ", " + String.valueOf(creeksCoors.get(i)[1]) + "\n";
+        }
+
+        // append the emergency site and coordinate
+        for (int j = 0; j < sitesID.size(); j++) {
+            report += "\tSite #" + String.valueOf(j + 1) + ": ";
+            report += "uid: " + sitesID.get(j) + ", ";
+            report += "At [x, y]: " + String.valueOf(sitesCoors.get(j)[0]) + ", " + String.valueOf(sitesCoors.get(j)[1]) + "\n";
+        }
+
+        // temporary to see format
+        logger.info("Final Report:\n {}", report);
+
+        return report;
     }
 
 }
