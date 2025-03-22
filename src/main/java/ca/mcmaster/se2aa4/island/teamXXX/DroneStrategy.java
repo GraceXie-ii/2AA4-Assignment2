@@ -67,11 +67,11 @@ public class DroneStrategy {
             }
             else { // if rangeValue < 2
                 // only find land
-                //decision = "stop"; // stop
+                decision = "stop"; // stop
                 
                 // link to grid search
-                decision = "fly";
-                doGridSearch = true;
+                //decision = "fly";
+                //doGridSearch = true;
             }
         }
 
@@ -99,12 +99,12 @@ public class DroneStrategy {
         }
 
         if (left) {
-            decision = "left";
+            decision = "heading left";
             left = false;
             turned_left = !turned_left;
         }
         else if (right) {
-            decision = "right";
+            decision = "heading right";
             right = false;
             turned_left = !turned_left;
         }
