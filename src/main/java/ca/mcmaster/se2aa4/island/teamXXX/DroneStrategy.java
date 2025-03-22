@@ -102,44 +102,40 @@ public class DroneStrategy {
             decision = "heading left";
             left = false;
             turned_left = !turned_left;
+            scanned = false;
+            radared = false;
         }
         else if (right) {
             decision = "heading right";
             right = false;
             turned_left = !turned_left;
+            scanned = false;
+            radared = false;
         }
 
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
+            scanned = true;
         }
         else if (radared == false) { // If not radared, radar
             decision = "echo front";
+            radared = true;
             
         }
-        else if (land == true) { // ocean search phase
+        else if (land == true) { // search on island
             decision = "fly";
+            scanned = false;
+            radared = false;
         }
         else { // land is found not found(out of range)
             if (!turned_left) {
                 decision = "heading left";
                 left = true;
             }
-            else if (turned_left) {
+            else {
                 decision = "heading right";
                 right = true;
             }
-        }
-
-        // rotate strategy state: scan, radar, fly/heading/stop
-        if (!scanned && !radared) {
-            scanned = true;
-        }
-        else if (scanned && !radared) {
-            radared = true;
-        }
-        else if (scanned && radared) {
-            scanned = false;
-            radared = false;
         }
 
         if (radarResults.getString("found").equals("GROUND")) {
