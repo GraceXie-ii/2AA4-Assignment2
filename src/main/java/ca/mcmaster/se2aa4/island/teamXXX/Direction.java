@@ -11,6 +11,11 @@ public class Direction {
         this.droneDir = direction;
     }
 
+    // get current drone direction 
+    public String getDroneDir() {
+        return this.droneDir;
+    }
+
     // get current drone direction vector = [x, y] for fly
     public int[] getDirectionVector() {
         return DIRECTION_VECTOR[DIRECTIONS.indexOf(this.droneDir)];

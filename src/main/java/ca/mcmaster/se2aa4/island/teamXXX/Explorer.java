@@ -26,6 +26,8 @@ public class Explorer implements IExplorerRaid {
     private DroneStrategy strategy;
     private Position position;
 
+    private Integer batteryLevel;
+
     @Override
     public void initialize(String s) {
         // create new JSON reader info
@@ -35,7 +37,7 @@ public class Explorer implements IExplorerRaid {
 
         // create variables to get drone heading and battery level
         String direction = info.getString("heading");
-        Integer batteryLevel = info.getInt("budget");
+        this.batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
@@ -45,15 +47,14 @@ public class Explorer implements IExplorerRaid {
         radar = new Radar();
         scanner = new PhotoScanner();
         position = new Position();
-        strategy = new DroneStrategy("findLand");
+        strategy = new DroneStrategy("bruteForce"); // choose strategy
 
     }
 
     @Override
     public String takeDecision() {
         // Initialize the decision JSON object as a string, and get decision from strategy
-        // Refreshed window to fix compiler not recognizing strategy.getStrategy
-        String decision = strategy.getStrategy(info.getInt("budget"), radar.getRadarInfo(), scanner.getScanInfo());
+        String decision = strategy.getStrategy(this.batteryLevel, radar.getRadarInfo(), scanner.getScanInfo(), droneDir.getDroneDir());
 
         // translate drone command strings to function calls, update drone position if heading or fly
         if (decision.equals("stop")) {
@@ -127,6 +128,9 @@ public class Explorer implements IExplorerRaid {
         }
 
         logger.info("The drone position is {}", position.getCoordinates());
+        // update battery level
+        this.batteryLevel -= cost;
+        logger.info("drone battery is at {}", this.batteryLevel);
     }
 
     @Override

@@ -7,13 +7,13 @@ import java.io.File;
 public class Runner {
 
     public static void main(String[] args) {
-        String filename = args[0];
+        String filename = args[0]; // originally budget is 7000
         try {
             run(Explorer.class)
                     .exploring(new File(filename))
                     .withSeed(42L)
                     .startingAt(1, 1, "EAST")
-                    .backBefore(7000)
+                    .backBefore(99000) 
                     .withCrew(5)
                     .collecting(1000, "WOOD")
                     .storingInto("./outputs")
