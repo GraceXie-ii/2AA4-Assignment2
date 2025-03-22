@@ -74,15 +74,20 @@ public class Explorer implements IExplorerRaid {
             decision = radar.sendRadarSignal("LEFT", droneDir.ifTurn("LEFT"));
         }
         else if (decision.equals("heading right")) {
+            // update drone position estimation by 1 grid before direction and 1 grid after direction change
+            position.updatePosition(droneDir.getDirectionVector());
             decision = move.heading(droneDir.turn("R"));
-            position.updatePosition(droneDir.getDirectionVector("R"));
+            position.updatePosition(droneDir.getDirectionVector());
         }
         else if (decision.equals("heading left")) {
+            // update drone position estimation by 1 grid before direction and 1 grid after direction change
+            position.updatePosition(droneDir.getDirectionVector());
             decision = move.heading(droneDir.turn("L"));
-            position.updatePosition(droneDir.getDirectionVector("L"));
+            position.updatePosition(droneDir.getDirectionVector());
         }
         else if (decision.equals("fly")) {
             decision = move.fly();
+            // update drone position estimation by 1 grid, direction does not change
             position.updatePosition(droneDir.getDirectionVector());
         }
 
