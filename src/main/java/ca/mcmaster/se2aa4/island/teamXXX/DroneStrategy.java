@@ -7,7 +7,7 @@ public class DroneStrategy {
     // Private variables to keep track of the state of the exploration
     private boolean scanned = false, radared = false, Newfoundland = false, doGridSearch = false;
     private boolean land = true, left = false, right = false, turned_left = false, turned_right = false;
-    private int empty_count = 0;
+    private boolean empty_check = false;
     private String strategy;
     protected int uTurnStep = 5;
 
@@ -70,8 +70,8 @@ public class DroneStrategy {
                 decision = "stop"; // stop
                 
                 // link to grid search
-                //decision = "fly";
-                //doGridSearch = true;
+                decision = "fly";
+                doGridSearch = true;
             }
         }
 
@@ -108,20 +108,13 @@ public class DroneStrategy {
             right = false;
             turned_left = !turned_left;
         }
-        
+
         else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan
         }
         else if (radared == false) { // If not radared, radar
             decision = "echo front";
-            if (radarResults.getString("found").equals("GROUND")) {
-                land = true;
-                empty_count--;
-            }
-            else {
-                land = false;
-                empty_count++;
-            }
+            
         }
         else if (land == true) { // ocean search phase
             decision = "fly";
@@ -131,7 +124,7 @@ public class DroneStrategy {
                 decision = "heading left";
                 left = true;
             }
-            else {
+            else if (turned_left) {
                 decision = "heading right";
                 right = true;
             }
@@ -148,8 +141,22 @@ public class DroneStrategy {
             scanned = false;
             radared = false;
         }
-        if (empty_count > 3) {
-            decision = "stop";
+
+        if (radarResults.getString("found").equals("GROUND")) {
+            land = true;
+            if (empty_check) {
+                empty_check = false;
+            }
+
+        }
+        else {
+            land = false;
+            if (!empty_check){
+                empty_check = true;
+            }
+            else {
+                decision = "stop";
+            }
         }
 
         return decision;
