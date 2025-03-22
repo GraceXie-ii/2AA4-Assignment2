@@ -47,6 +47,11 @@ public class Position {
         return this.sitesCoordinates;
     }
 
+    // check if all POIS are found
+    public boolean allFound() {
+        return this.creeksID.size() == 10 && this.sitesID.size() == 1;
+    }
+
     // Find nearest creek index to the site
     public int findNearestCreekIndex() {
         

@@ -22,12 +22,12 @@ public class DroneStrategy {
     }
 
     // Method to find land
-    public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir) {
+    public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
         // if MVP search land
         if (strategy.equals("findLand") && !doGridSearch){
             return findLand(batteryLevel, radarResults, scanResults);
         } else if (strategy.equals("bruteForce")) {
-            return bruteSearch(batteryLevel, radarResults, scanResults, droneDir);
+            return bruteSearch(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else {
             return gridSearch(batteryLevel, radarResults, scanResults);
         }
@@ -96,14 +96,14 @@ public class DroneStrategy {
 
     private boolean searchDown = true, uRight = false, uLeft = false; 
 
-    public String bruteSearch(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir) {
+    public String bruteSearch(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
         // JSONObject is used to delay getting data from radar, to when data is actually collected and available
         // ----------------------------Initialize the decision JSON object as a string----------------------------
         String decision = "";
 
         // ----------------------------Implement the decision logic-----------------------------------------------
         // If battery is low, stop mission; scan, radar
-        if (batteryLevel < 100) { // If battery is low, stop mission
+        if (batteryLevel < 100 || allFound) { // If battery is low, stop mission
             decision = "stop"; // stop
         } else if (scanned == false) { // If not scanned, scan
             decision = "scan"; // scan

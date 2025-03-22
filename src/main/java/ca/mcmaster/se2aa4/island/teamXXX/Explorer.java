@@ -55,7 +55,7 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String takeDecision() {
         // Initialize the decision JSON object as a string, and get decision from strategy
-        String decision = strategy.getStrategy(this.batteryLevel, radar.getRadarInfo(), scanner.getScanInfo(), droneDir.getDroneDir());
+        String decision = strategy.getStrategy(this.batteryLevel, radar.getRadarInfo(), scanner.getScanInfo(), droneDir.getDroneDir(), position.allFound());
 
         // translate drone command strings to function calls, update drone position if heading or fly
         if (decision.equals("stop")) {
