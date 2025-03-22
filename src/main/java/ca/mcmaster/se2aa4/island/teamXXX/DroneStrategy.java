@@ -313,4 +313,10 @@ public class DroneStrategy {
         return decision.toString();
     }
 
+    public String toOrigin(String direction, String position) {
+        String decision = "";
+        
+        return decision;
+    }
+
 }
