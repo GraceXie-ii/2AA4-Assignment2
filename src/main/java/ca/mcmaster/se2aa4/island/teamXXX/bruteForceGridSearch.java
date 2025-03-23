@@ -2,10 +2,11 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
 
-public class bruteForceGridSearch {
+public class bruteForceGridSearch implements SearchAlgorithm {
 
     private boolean scanned = false, radared = false, searchDown = true, uRight = false, uLeft = false; 
 
+    @Override
     public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
         // JSONObject is used to delay getting data from radar, to when data is actually collected and available
         // ----------------------------Initialize the decision JSON object as a string----------------------------
