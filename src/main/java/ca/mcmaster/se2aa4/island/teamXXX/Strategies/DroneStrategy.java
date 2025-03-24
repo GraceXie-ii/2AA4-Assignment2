@@ -29,7 +29,13 @@ public class DroneStrategy {
         } else if (strategy.equals("bruteForce")) { // brute force search
             return interlaced_search.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else if (strategy.equals("topLeft")) {
-            return topLeft.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
+            String decision = topLeft.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
+            if (decision.equals("done")) {
+                return interlaced_search.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
+            }
+            else {
+                return decision;
+            }
         }
         else {
             System.out.println("not valid");

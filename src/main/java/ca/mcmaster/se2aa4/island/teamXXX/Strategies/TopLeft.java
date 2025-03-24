@@ -40,7 +40,7 @@ public class TopLeft implements SearchAlgorithm {
       }
     }
     else {
-      decision = "stop"; //stop if all conidtion above not met, meaning drone is at top left location
+      decision = "done"; //stop if all conidtion above not met, meaning drone is at top left location
     }
 
     if (radared) { //alternating the state of radared for each function call
