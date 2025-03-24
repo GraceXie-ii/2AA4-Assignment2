@@ -7,14 +7,14 @@ public class DroneStrategy {
     // private sub-classes to delegate specfic strategy
     private FindLand findLand = new FindLand();
     private bruteForceGridSearch bruteSearch = new bruteForceGridSearch();
-    private GridSearch gridSearch = new GridSearch();
+    
 
     // Private variables to keep track of the state of the exploration
     private String strategy; // strategy choice
 
     // Constructor to allow strategy choice
     public DroneStrategy(String strategy) {
-        if (strategy.equals("findLand") || (strategy.equals("bruteForce")) || (strategy.equals("gridSearch"))) {
+        if (strategy.equals("findLand") || (strategy.equals("bruteForce"))) {
             this.strategy = strategy;
         } else {
             System.out.println("Not a valid Strategy");
@@ -27,8 +27,10 @@ public class DroneStrategy {
             return findLand.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else if (strategy.equals("bruteForce")) { // brute force search
             return bruteSearch.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
-        } else {
-            return gridSearch.getStrategy(batteryLevel, radarResults, scanResults);
+        }
+        else {
+            System.out.println("not valid");
+            return "";
         }
     }
 
