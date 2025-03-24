@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
 
-public class bruteForceGridSearch implements SearchAlgorithm {
+public class BottomRightGridSearch implements SearchAlgorithm {
 
     private boolean scanned = false, radared = false, searchDown = false, uRight = false, uLeft = false; 
 
@@ -59,7 +59,7 @@ public class bruteForceGridSearch implements SearchAlgorithm {
                 }
             } else if (droneDir.equals("N")) { // if north
                 if (radarResults.getInt("range") <= 2) {
-                    searchUp = false;
+                    searchDown = true;
                 }
                 if (radarResults.getInt("range") == 3) {
                     decision = "fly";
