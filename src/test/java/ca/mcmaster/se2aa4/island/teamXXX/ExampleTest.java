@@ -1,6 +1,14 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.junit.jupiter.api.Test;
+
+import ca.mcmaster.se2aa4.island.teamXXX.Actions.Move;
+import ca.mcmaster.se2aa4.island.teamXXX.Actions.PhotoScanner;
+import ca.mcmaster.se2aa4.island.teamXXX.Actions.Radar;
+import ca.mcmaster.se2aa4.island.teamXXX.Datas.Direction;
+import ca.mcmaster.se2aa4.island.teamXXX.Datas.Position;
+import ca.mcmaster.se2aa4.island.teamXXX.Strategies.DroneStrategy;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 

@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.teamXXX;
+package ca.mcmaster.se2aa4.island.teamXXX.Datas;
 
 public class Direction {
     // Initialize drone direction, final list of directions
