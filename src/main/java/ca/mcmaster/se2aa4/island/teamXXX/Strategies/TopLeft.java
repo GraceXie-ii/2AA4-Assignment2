@@ -36,6 +36,7 @@ public class TopLeft implements SearchAlgorithm {
       }
       else {
         decision = "heading right"; // turn right if reaching border
+        top_most = true;
       }
     }
     else {
