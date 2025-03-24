@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
 
-public class bruteForceGridSearch implements SearchAlgorithm {
+public class InterlacedSearch implements SearchAlgorithm {
 
     private boolean scanned = false, radared = false, searchDown = true, uRight = false, uLeft = false; 
 
