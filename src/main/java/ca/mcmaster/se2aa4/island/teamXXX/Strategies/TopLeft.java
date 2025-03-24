@@ -8,7 +8,7 @@ public class TopLeft implements SearchAlgorithm {
  
   public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
 
-    String decision = "";
+    String decision = ""; //initilization of decision returning string
 
     if (batteryLevel < 100) { // If battery is low, stop mission
       decision = "stop"; // stop
@@ -16,30 +16,30 @@ public class TopLeft implements SearchAlgorithm {
     else if (!radared) { // If not radared, do radar
       decision = "echo front"; // radar front
     }
-    else if (!left_most) {
-      if (!(droneDir.equals("W"))) {
+    else if (!left_most) { //if not at left most
+      if (!(droneDir.equals("W"))) { //if drone is not heading east, turn till get to east
         decision = "heading right";
       }
       else {
-        if (radarResults.getInt("range") > 1 || radarResults.getString("found").equals("GROUND")) {
+        if (radarResults.getInt("range") > 1 || radarResults.getString("found").equals("GROUND")) { //check if the drone have not yet reached the border
           decision = "fly";
         }
-        else {
+        else { //else turn right
           left_most = true;
           decision = "heading right";
         }
       }
     }
     else if (!top_most) {
-      if (radarResults.getInt("range") > 1 || radarResults.getString("found").equals("GROUND")) {
+      if (radarResults.getInt("range") > 1 || radarResults.getString("found").equals("GROUND")) { //check if drone has not reached border
         decision = "fly";
       }
       else {
-        decision = "heading right";
+        decision = "heading right"; // turn right if reaching border
       }
     }
     else {
-      decision = "stop";
+      decision = "stop"; //stop if all conidtion above not met, meaning drone is at top left location
     }
 
     if (radared) { //alternating the state of radared for each function call
