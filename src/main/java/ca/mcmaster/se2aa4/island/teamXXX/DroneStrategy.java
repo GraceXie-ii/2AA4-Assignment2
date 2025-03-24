@@ -24,7 +24,7 @@ public class DroneStrategy {
     // Method to find land
     public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
         if (strategy.equals("findLand")){ // if MVP search land
-            return findLand.getStrategy(batteryLevel, radarResults, scanResults);
+            return findLand.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else if (strategy.equals("bruteForce")) { // brute force search
             return bruteSearch.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else {

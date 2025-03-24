@@ -48,7 +48,7 @@ public class Explorer implements IExplorerRaid {
         radar = new Radar();
         scanner = new PhotoScanner();
         position = new Position();
-        strategy = new DroneStrategy("bruteForce"); // choose strategy
+        strategy = new DroneStrategy("bruteForce"); // choose strategy: "findLand"/"bruteForce"
 
     }
 

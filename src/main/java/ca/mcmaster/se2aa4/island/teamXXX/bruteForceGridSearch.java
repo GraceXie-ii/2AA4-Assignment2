@@ -78,9 +78,7 @@ public class bruteForceGridSearch implements SearchAlgorithm {
                     uLeft = true;
                 }
             }
-        } else { // search up
-            //decision = "stop";
-             
+        } else { // search up             
             if (droneDir.equals("E")) { // moving East
                 if (radarResults.getInt("range") > 2 || radarResults.getString("found").equals("GROUND")) { // not at border
                     decision = "fly"; // fly
