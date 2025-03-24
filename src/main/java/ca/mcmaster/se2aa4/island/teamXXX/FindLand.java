@@ -2,11 +2,11 @@ package ca.mcmaster.se2aa4.island.teamXXX;
 
 import org.json.JSONObject;
 
-public class FindLand {
+public class FindLand implements SearchAlgorithm {
 
     private boolean scanned = false, radared = false, Newfoundland = false; // find land
 
-    public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults) {
+    public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
         // JSONObject is used to delay getting data from radar, to when data is actually collected and available
         // Initialize the decision JSON object as a string
         String decision = "";
