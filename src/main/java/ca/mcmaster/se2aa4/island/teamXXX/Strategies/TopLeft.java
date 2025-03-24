@@ -4,13 +4,19 @@ import org.json.JSONObject;
 
 public class TopLeft implements SearchAlgorithm {
 
-  private boolean left_most = false, top_most = false;
+  private boolean left_most = false, top_most = false, radared = false;
  
   public String getStrategy(int batteryLevel, JSONObject radarResults, JSONObject scanResults, String droneDir, boolean allFound) {
 
     String decision = "";
 
-    if (!left_most) {
+    if (batteryLevel < 100) { // If battery is low, stop mission
+      decision = "stop"; // stop
+    } 
+    else if (!radared) { // If not radared, do radar
+      decision = "echo front"; // radar front
+    }
+    else if (!left_most) {
       if (!(droneDir.equals("W"))) {
         decision = "heading right";
       }
@@ -36,6 +42,12 @@ public class TopLeft implements SearchAlgorithm {
       decision = "stop";
     }
 
+    if (radared) { //alternating the state of radared for each function call
+      radared = false;
+    }
+    else {
+      radared = true;
+    }
 
 
     return decision;
