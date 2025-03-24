@@ -7,6 +7,7 @@ public class DroneStrategy {
     // private sub-classes to delegate specfic strategy
     private FindLand findLand = new FindLand();
     private InterlacedSearch interlaced_search = new InterlacedSearch();
+    private TopLeft topLeft = new TopLeft();
     
 
     // Private variables to keep track of the state of the exploration
@@ -14,7 +15,7 @@ public class DroneStrategy {
 
     // Constructor to allow strategy choice
     public DroneStrategy(String strategy) {
-        if (strategy.equals("findLand") || (strategy.equals("bruteForce"))) {
+        if (strategy.equals("findLand") || (strategy.equals("bruteForce")) || (strategy.equals("topLeft"))) {
             this.strategy = strategy;
         } else {
             System.out.println("Not a valid Strategy");
@@ -27,6 +28,8 @@ public class DroneStrategy {
             return findLand.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         } else if (strategy.equals("bruteForce")) { // brute force search
             return interlaced_search.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
+        } else if (strategy.equals("topLeft")) {
+            return topLeft.getStrategy(batteryLevel, radarResults, scanResults, droneDir, allFound);
         }
         else {
             System.out.println("not valid");
