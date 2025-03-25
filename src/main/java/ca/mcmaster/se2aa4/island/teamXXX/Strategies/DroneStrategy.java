@@ -13,7 +13,7 @@ public class DroneStrategy {
 
     // Constructor to allow strategy choice
     public DroneStrategy(String strategy) {
-        if (strategy.equals("findLand") || (strategy.equals("bruteForce")) || (strategy.equals("topLeft"))) {
+        if (strategy.equals("findLand") || (strategy.equals("bruteForce"))) {
             this.strategy = strategy;
         } else {
             System.out.println("Not a valid Strategy");
