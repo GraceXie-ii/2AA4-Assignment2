@@ -11,15 +11,17 @@ import ca.mcmaster.se2aa4.island.teamXXX.Strategies.DroneStrategy;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.json.JSONObject;
+
 
 public class ExampleTest {
 
     // get subclasses
-    private Direction droneDir = new Direction("East");
+    private Direction droneDir = new Direction("E");
     private Move move = new Move();
     private Radar radar = new Radar();
     private PhotoScanner scanner = new PhotoScanner();
-    private DroneStrategy strategy = new DroneStrategy("bruteSearch");
+    private DroneStrategy strategy = new DroneStrategy("bruteForce");
     private Position position = new Position();
 
     /* 
@@ -44,6 +46,18 @@ public class ExampleTest {
         assertTrue(move.stop().equals("{\"action\":\"stop\"}"));
     }
 
+    // ---------------------------------Testing Radar subclass----------------------------------------------------
+    @Test
+    public void testRadarActionToString() { // check if radar outputs JSON command correctly, E turns right onto S
+        assertTrue(radar.sendRadarSignal("RIGHT", droneDir.ifTurn("RIGHT")).equals("{\"action\":\"echo\",\"parameters\":{\"direction\":\"S\"}}"));
+    }
+
+    // ---------------------------------Testing Scan subclass-----------------------------------------------------
+    @Test
+    public void testScanActionToString() { // check if scan outputs JSON command correctly
+        assertTrue(scanner.scan().equals("{\"action\":\"scan\"}"));
+    }
+
     // ---------------------------------Testing Position subclass-------------------------------------------------
     // MOCK of Position - private findDistance method: get distance between a creek and a site
     private double MOCK_findDistance(double x1, double y1, double x2, double y2) {
@@ -54,7 +68,7 @@ public class ExampleTest {
     }
 
     @Test
-    public void testDistanceCalculation() {
+    public void testDistanceCalculation() { // testing mock
 
         double sampleX1 = 2, sampleY1 = 3, sampleX2 = 4, sampleY2 = 5, result;
         
@@ -62,6 +76,22 @@ public class ExampleTest {
 
         // result should be = sqrt((4-2) ^ 2 + (5-3) ^ 2) = sqrt(4+4) = sqrt(8) is approx 2.828
         assertTrue(2.82 < result && result < 2.83);
+    }
+
+    @Test
+    public void testAllFound() { // check if all found is false at beginning
+        assertFalse(position.allFound());
+    }
+
+    // ---------------------------------Testing Position subclass-------------------------------------------------
+    @Test
+    public void testInterlacedSearchStopsAtLowBattery() { // check if strategy always stops under 100 battery
+        assertTrue(strategy.getStrategy(10, new JSONObject(), new JSONObject(), "E", false).equals("stop"));
+    }
+
+    @Test
+    public void testInterlacedSearchStopsWhenFinished() { // check if strategy always stops when all targets found
+        assertTrue(strategy.getStrategy(10000, new JSONObject(), new JSONObject(), "E", true).equals("stop"));
     }
 
 
