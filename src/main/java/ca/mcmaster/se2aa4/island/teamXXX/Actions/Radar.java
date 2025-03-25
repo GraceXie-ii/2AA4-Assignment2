@@ -1,8 +1,6 @@
 package ca.mcmaster.se2aa4.island.teamXXX.Actions;
 
 import org.json.JSONObject;
-//import org.json.JSONTokener;
-//import java.io.*;
 
 public class Radar {
 

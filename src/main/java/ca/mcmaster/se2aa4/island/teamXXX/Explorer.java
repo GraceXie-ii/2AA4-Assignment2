@@ -15,7 +15,6 @@ import ca.mcmaster.se2aa4.island.teamXXX.Datas.Direction;
 import ca.mcmaster.se2aa4.island.teamXXX.Datas.Position;
 import ca.mcmaster.se2aa4.island.teamXXX.Strategies.DroneStrategy;
 import eu.ace_design.island.bot.IExplorerRaid;
-//import org.json.JSONArray;
 
 public class Explorer implements IExplorerRaid {
 

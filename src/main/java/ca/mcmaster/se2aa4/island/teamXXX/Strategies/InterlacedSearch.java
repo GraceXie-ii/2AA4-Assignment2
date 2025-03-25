@@ -108,7 +108,7 @@ public class InterlacedSearch implements SearchAlgorithm {
             
         }
         // ----------------------------rotate strategy state: scan, radar, fly/heading/stop-----------------------
-        //      gurantee scan and radar results to be available at each move
+        // gurantee scan and radar results to be available at each movement action
         if (!scanned && !radared) {
             scanned = true;
         }
